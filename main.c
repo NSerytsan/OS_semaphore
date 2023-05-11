@@ -12,12 +12,12 @@ enum state
     EATING
 };
 
-int left_philosopher(int idx)
+int left_fork(int idx)
 {
     return (idx + 4) % NUMBER_OF_PHILOSOPHERS;
 }
 
-int right_philosopher(int idx)
+int right_fork(int idx)
 {
     return (idx + 1) % NUMBER_OF_PHILOSOPHERS;
 }
@@ -30,14 +30,14 @@ sem_t signals[NUMBER_OF_PHILOSOPHERS];
 
 void check(int philosopher)
 {
-    if (state[philosopher] == HUNGRY && state[left_philosopher(philosopher)] != EATING && state[right_philosopher(philosopher)] != EATING)
+    if (state[philosopher] == HUNGRY && state[left_fork(philosopher)] != EATING && state[right_fork(philosopher)] != EATING)
     {
         state[philosopher] = EATING;
 
         sleep(2);
 
         printf("Philosopher %d takes fork %d and %d\n",
-               philosopher + 1, left_philosopher(philosopher) + 1, philosopher + 1);
+               philosopher + 1, left_fork(philosopher) + 1, philosopher + 1);
 
         printf("Philosopher %d is Eating\n", philosopher + 1);
 
@@ -70,11 +70,11 @@ void put_fork(int philosopher)
     state[philosopher] = THINKING;
 
     printf("Philosopher %d putting fork %d and %d down\n",
-           philosopher + 1, left_philosopher(philosopher) + 1, philosopher + 1);
+           philosopher + 1, left_fork(philosopher) + 1, philosopher + 1);
     printf("Philosopher %d is Thinking\n", philosopher + 1);
 
-    check(left_philosopher(philosopher));
-    check(right_philosopher(philosopher));
+    check(left_fork(philosopher));
+    check(right_fork(philosopher));
 
     sem_post(&mutex);
 }
